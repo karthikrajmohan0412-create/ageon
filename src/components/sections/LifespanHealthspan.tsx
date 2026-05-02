@@ -2,6 +2,7 @@
 
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
+import { DnaScene } from "../three/DnaScene";
 
 export function LifespanHealthspan() {
   const ref = useRef<HTMLElement>(null);
@@ -30,6 +31,9 @@ export function LifespanHealthspan() {
   });
 
   const bgOpacity = useTransform(progress, [0.2, 0.55], [0, 1]);
+  // DNA helix is the focal point of the dark phase — fully visible at the
+  // top of the section and fades out a beat before the cream takes over.
+  const dnaOpacity = useTransform(progress, [0, 0.45], [1, 0]);
   const beamWidth = useTransform(progress, [0.3, 0.85], ["0%", "100%"]);
   const titleY = useTransform(progress, [0, 0.6], [0, -120]);
   const titleScale = useTransform(progress, [0, 0.6, 0.85], [1, 0.7, 0.55]);
@@ -65,6 +69,15 @@ export function LifespanHealthspan() {
           style={{ width: beamWidth, opacity: bgOpacity }}
           className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 bg-gradient-to-r from-transparent via-white to-transparent blur-2xl"
         />
+
+        {/* DNA helix — sits behind the headline during the dark phase
+            and fades out as the cream background takes over. */}
+        <motion.div
+          style={{ opacity: dnaOpacity }}
+          className="absolute inset-0 z-[5] pointer-events-none"
+        >
+          <DnaScene />
+        </motion.div>
 
         <motion.div
           style={{ y: titleY, scale: titleScale, opacity: titleOpacity }}
