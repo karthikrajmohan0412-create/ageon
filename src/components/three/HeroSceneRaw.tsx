@@ -235,14 +235,13 @@ export function HeroSceneRaw() {
         o.basePosition.x = orbBaseXOriginal[i] * orbXScale;
       });
 
-      // Shrink the centre mark on portrait/mobile — at 0.85 it dominates
-      // the screen and overlaps the headline text. Desktop keeps 0.85.
-      const markScale = aspect < 1 ? 0.45 : 0.85;
-      markGroup.scale.setScalar(markScale);
-
-      // Push the mark up into the empty area above the headline on mobile
-      // so it stops colliding with the stacked LIVING / ALIVE text blocks.
-      markBaseY = aspect < 1 ? 1.7 : 0;
+      // Hide the centre mark on portrait/mobile — the AGEON logo already
+      // sits in the top-left header on mobile, and the 3D mark just kept
+      // colliding with the stacked headline text no matter where we put it.
+      // Desktop keeps the mark at its original size and centre position.
+      markGroup.visible = aspect >= 1;
+      markGroup.scale.setScalar(0.85);
+      markBaseY = 0;
     };
     onResize();
     window.addEventListener("resize", onResize);
