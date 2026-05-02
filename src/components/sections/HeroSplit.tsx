@@ -62,13 +62,18 @@ export function HeroSplit() {
         </div>
       </div>
 
-      {/* Single shared 3D scene covering the whole hero */}
-      <motion.div
-        style={{ scale: sceneScale, y: sceneY }}
-        className="absolute inset-0 z-10 pointer-events-none"
-      >
-        <HeroSceneRaw />
-      </motion.div>
+      {/* Single shared 3D scene covering the whole hero — desktop only.
+          On mobile the side-by-side composition collapses to a stacked
+          layout that the scene can't compose against, so we let the photo
+          backgrounds carry the hero instead. */}
+      {isDesktop && (
+        <motion.div
+          style={{ scale: sceneScale, y: sceneY }}
+          className="absolute inset-0 z-10 pointer-events-none"
+        >
+          <HeroSceneRaw />
+        </motion.div>
+      )}
 
       {/* Vignette layers to darken edges and improve readability */}
       <div className="absolute inset-0 z-15 pointer-events-none bg-[radial-gradient(ellipse_at_center,transparent_0%,transparent_55%,rgba(0,0,0,0.3)_100%)]" />
