@@ -198,8 +198,11 @@ export function HeroSceneRaw() {
     markGroup.add(redMesh);
     // Center the group as a whole and depth-offset to camera
     markGroup.position.z = -0.2;
-    markGroup.scale.setScalar(0.85);
     scene.add(markGroup);
+
+    // Remember the design-time (wide-viewport) orb X positions so we can
+    // pull them inward when the viewport is narrow.
+    const orbBaseXOriginal = orbs.map((o) => o.basePosition.x);
 
     // Mouse parallax
     const onMouseMove = (e: MouseEvent) => {
@@ -209,14 +212,28 @@ export function HeroSceneRaw() {
     };
     window.addEventListener("mousemove", onMouseMove);
 
-    // Resize
+    // Resize — also re-fits the scene for the current aspect ratio so
+    // the side orbs and centre mark remain visible on portrait/mobile.
     const onResize = () => {
       const w = container.clientWidth;
       const h = container.clientHeight;
-      camera.aspect = w / h;
+      const aspect = w / h;
+      camera.aspect = aspect;
       camera.updateProjectionMatrix();
       renderer.setSize(w, h);
+
+      // Pull orbs in toward the centre on narrow viewports so they stay
+      // inside the camera's visible horizontal extent.
+      const orbXScale = Math.min(1, Math.max(0.32, aspect / 1.6));
+      orbs.forEach((o, i) => {
+        o.basePosition.x = orbBaseXOriginal[i] * orbXScale;
+      });
+
+      // Compensate the centre mark so it doesn't feel tiny on mobile.
+      const markScale = aspect < 1 ? 1.15 : 0.85;
+      markGroup.scale.setScalar(markScale);
     };
+    onResize();
     window.addEventListener("resize", onResize);
 
     // Animation loop

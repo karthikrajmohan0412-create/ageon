@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { LogoMark } from "../Logo";
 import { HeroSceneRaw } from "../three/HeroSceneRaw";
 import { imagery } from "@/lib/imagery";
@@ -12,6 +12,17 @@ export function HeroSplit() {
     target: ref,
     offset: ["start start", "end start"],
   });
+
+  // Horizontal parallax only makes sense on the side-by-side desktop layout —
+  // on mobile the columns stack and shifting them ±150px clips text off-screen.
+  const [isDesktop, setIsDesktop] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 768px)");
+    const update = () => setIsDesktop(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
 
   const leftX = useTransform(scrollYProgress, [0, 1], [0, -150]);
   const rightX = useTransform(scrollYProgress, [0, 1], [0, 150]);
@@ -88,7 +99,7 @@ export function HeroSplit() {
       <div className="relative z-20 grid grid-cols-1 md:grid-cols-2 min-h-[calc(100vh-100px)]">
         {/* LEFT — living */}
         <motion.div
-          style={{ x: leftX }}
+          style={isDesktop ? { x: leftX } : undefined}
           className="relative flex items-end md:items-center px-6 pb-12 pt-24 md:p-16"
         >
           <div className="max-w-md">
@@ -104,7 +115,7 @@ export function HeroSplit() {
 
         {/* RIGHT — alive */}
         <motion.div
-          style={{ x: rightX }}
+          style={isDesktop ? { x: rightX } : undefined}
           className="relative flex items-start md:items-center justify-start md:justify-end px-6 pt-12 pb-24 md:p-16"
         >
           <div className="max-w-md">
