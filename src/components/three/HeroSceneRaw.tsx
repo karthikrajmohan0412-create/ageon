@@ -213,6 +213,11 @@ export function HeroSceneRaw() {
     // the top half and warm orbs in the bottom half.
     const orbIsDark = [true, true, false, false, false];
 
+    // On mobile, place each orb on the left or right side of the screen
+    // (sign of X) so each half has blobs on BOTH sides instead of all
+    // clumping into one corner.
+    const orbMobileXSide = [-1, 1, 1, -1, 1];
+
     // Vertical offset applied to the centre mark — set by onResize and
     // honoured by the animation loop so its float doesn't clobber it.
     let markBaseY = 0;
@@ -242,13 +247,17 @@ export function HeroSceneRaw() {
       const orbXScale = Math.min(1, Math.max(0.32, aspect / 1.6));
       const portrait = aspect < 1;
       orbs.forEach((o, i) => {
-        o.basePosition.x = orbBaseXOriginal[i] * orbXScale;
         if (portrait) {
-          // Keep at least 0.6 units away from the boundary so the float
-          // animation (±0.25) can never push the orb across it.
+          // Spread orbs to both sides of the screen — sign comes from
+          // orbMobileXSide rather than the original landscape layout.
+          o.basePosition.x =
+            Math.abs(orbBaseXOriginal[i]) * orbXScale * orbMobileXSide[i];
+          // Keep at least 0.6 units away from the dark/teal boundary so
+          // the float animation (±0.25) can never push the orb across it.
           const magnitude = Math.max(Math.abs(orbBaseYOriginal[i]), 0.6);
           o.basePosition.y = orbIsDark[i] ? magnitude : -magnitude;
         } else {
+          o.basePosition.x = orbBaseXOriginal[i] * orbXScale;
           o.basePosition.y = orbBaseYOriginal[i];
         }
       });
