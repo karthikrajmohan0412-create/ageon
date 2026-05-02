@@ -235,6 +235,10 @@ export function HeroSceneRaw() {
       // the screen and overlaps the headline text. Desktop keeps 0.85.
       const markScale = aspect < 1 ? 0.45 : 0.85;
       markGroup.scale.setScalar(markScale);
+
+      // Push the mark up into the empty area above the headline on mobile
+      // so it stops colliding with the stacked LIVING / ALIVE text blocks.
+      markGroup.position.y = aspect < 1 ? 1.7 : 0;
     };
     onResize();
     window.addEventListener("resize", onResize);
