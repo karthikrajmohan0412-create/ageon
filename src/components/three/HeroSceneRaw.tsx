@@ -205,6 +205,13 @@ export function HeroSceneRaw() {
     // Remember the design-time (wide-viewport) orb X positions so we can
     // pull them inward when the viewport is narrow.
     const orbBaseXOriginal = orbs.map((o) => o.basePosition.x);
+    const orbBaseYOriginal = orbs.map((o) => o.basePosition.y);
+
+    // Which orbs are the dark "atmospheric" ones (first two) vs the
+    // colourful warm ones (last three). On mobile the LIVING (dark) and
+    // ALIVE (teal) halves stack vertically, so dark orbs need to stay in
+    // the top half and warm orbs in the bottom half.
+    const orbIsDark = [true, true, false, false, false];
 
     // Vertical offset applied to the centre mark — set by onResize and
     // honoured by the animation loop so its float doesn't clobber it.
@@ -229,10 +236,21 @@ export function HeroSceneRaw() {
       renderer.setSize(w, h);
 
       // Pull orbs in toward the centre on narrow viewports so they stay
-      // inside the camera's visible horizontal extent.
+      // inside the camera's visible horizontal extent. On mobile, also
+      // force each orb into the half it thematically belongs to: dark
+      // orbs above world-Y=0 (LIVING half), warm orbs below (ALIVE half).
       const orbXScale = Math.min(1, Math.max(0.32, aspect / 1.6));
+      const portrait = aspect < 1;
       orbs.forEach((o, i) => {
         o.basePosition.x = orbBaseXOriginal[i] * orbXScale;
+        if (portrait) {
+          // Keep at least 0.6 units away from the boundary so the float
+          // animation (±0.25) can never push the orb across it.
+          const magnitude = Math.max(Math.abs(orbBaseYOriginal[i]), 0.6);
+          o.basePosition.y = orbIsDark[i] ? magnitude : -magnitude;
+        } else {
+          o.basePosition.y = orbBaseYOriginal[i];
+        }
       });
 
       // Hide the centre mark on portrait/mobile — the AGEON logo already
