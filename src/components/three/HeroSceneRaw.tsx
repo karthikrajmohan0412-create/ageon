@@ -229,8 +229,9 @@ export function HeroSceneRaw() {
         o.basePosition.x = orbBaseXOriginal[i] * orbXScale;
       });
 
-      // Compensate the centre mark so it doesn't feel tiny on mobile.
-      const markScale = aspect < 1 ? 1.15 : 0.85;
+      // Shrink the centre mark on portrait/mobile — at 0.85 it dominates
+      // the screen and overlaps the headline text. Desktop keeps 0.85.
+      const markScale = aspect < 1 ? 0.45 : 0.85;
       markGroup.scale.setScalar(markScale);
     };
     onResize();
