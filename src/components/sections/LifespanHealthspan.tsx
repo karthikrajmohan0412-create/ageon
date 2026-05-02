@@ -83,15 +83,29 @@ export function LifespanHealthspan() {
           style={{ y: titleY, scale: titleScale, opacity: titleOpacity }}
           className="relative z-10 text-center px-8"
         >
+          {/* Dark radial scrim so the headline reads against the helix */}
+          <motion.div
+            style={{ opacity: dnaOpacity }}
+            aria-hidden
+            className="absolute inset-0 -mx-12 -my-8 -z-10 bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0.85)_0%,rgba(0,0,0,0.55)_45%,transparent_75%)]"
+          />
           <motion.p
             className="text-xs tracking-[0.4em] mb-6"
-            style={{ color: titleColor, opacity: 0.6 }}
+            style={{
+              color: titleColor,
+              opacity: 0.6,
+              textShadow: "0 0 18px rgba(0,0,0,0.9)",
+            }}
           >
             — THE GAP —
           </motion.p>
           <motion.h2
             className="font-display text-3xl md:text-7xl font-light max-w-4xl mx-auto leading-[1.05] px-4"
-            style={{ color: titleColor }}
+            style={{
+              color: titleColor,
+              textShadow:
+                "0 2px 24px rgba(0,0,0,0.95), 0 0 48px rgba(0,0,0,0.7)",
+            }}
           >
             Longevity is <span className="italic">not</span> measured in years.
           </motion.h2>
