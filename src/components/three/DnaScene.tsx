@@ -122,14 +122,22 @@ export function DnaScene() {
     // Slight initial tilt so the helix reads as 3D from the first frame
     dnaGroup.rotation.x = 0.18;
 
-    // Resize
+    // Resize — also fits the helix to portrait/mobile viewports so it
+    // doesn't fill the entire screen and bury the headline text.
     const onResize = () => {
       const w = container.clientWidth;
       const h = container.clientHeight;
-      camera.aspect = w / h;
+      const aspect = w / h;
+      camera.aspect = aspect;
       camera.updateProjectionMatrix();
       renderer.setSize(w, h);
+
+      // Shrink the helix on portrait viewports so it reads as a focal
+      // element behind the headline rather than swallowing the screen.
+      const groupScale = aspect < 1 ? 0.55 : 1;
+      dnaGroup.scale.setScalar(groupScale);
     };
+    onResize();
     window.addEventListener("resize", onResize);
 
     // Animation loop — slow rotation; the section's scroll-tied opacity
