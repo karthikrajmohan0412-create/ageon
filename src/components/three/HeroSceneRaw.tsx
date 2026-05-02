@@ -105,16 +105,18 @@ export function HeroSceneRaw() {
     }
 
     const orbs: Orb[] = [
-      // Left dark orbs (behind dark half) — pulled outward
+      // Left dark orbs (behind dark half) — pulled outward.
+      // Vertically separated and shrunk so they don't pile up when the
+      // mobile resize handler pulls them inward toward the centre.
       {
-        mesh: createOrb(0x3a3a40, [-4.6, -0.8, -1.5], 1.0, 0.05),
-        basePosition: new THREE.Vector3(-4.6, -0.8, -1.5),
+        mesh: createOrb(0x3a3a40, [-4.6, -1.8, -1.5], 0.7, 0.05),
+        basePosition: new THREE.Vector3(-4.6, -1.8, -1.5),
         speed: 0.6,
         floatPhase: 0,
       },
       {
-        mesh: createOrb(0x4a4a52, [-4.2, 1.6, -2.5], 0.7, 0.06),
-        basePosition: new THREE.Vector3(-4.2, 1.6, -2.5),
+        mesh: createOrb(0x4a4a52, [-4.2, 2.0, -2.5], 0.5, 0.06),
+        basePosition: new THREE.Vector3(-4.2, 2.0, -2.5),
         speed: 0.8,
         floatPhase: 1.7,
       },
