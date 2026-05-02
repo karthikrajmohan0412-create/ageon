@@ -206,6 +206,10 @@ export function HeroSceneRaw() {
     // pull them inward when the viewport is narrow.
     const orbBaseXOriginal = orbs.map((o) => o.basePosition.x);
 
+    // Vertical offset applied to the centre mark — set by onResize and
+    // honoured by the animation loop so its float doesn't clobber it.
+    let markBaseY = 0;
+
     // Mouse parallax
     const onMouseMove = (e: MouseEvent) => {
       const rect = container.getBoundingClientRect();
@@ -238,7 +242,7 @@ export function HeroSceneRaw() {
 
       // Push the mark up into the empty area above the headline on mobile
       // so it stops colliding with the stacked LIVING / ALIVE text blocks.
-      markGroup.position.y = aspect < 1 ? 1.7 : 0;
+      markBaseY = aspect < 1 ? 1.7 : 0;
     };
     onResize();
     window.addEventListener("resize", onResize);
@@ -262,7 +266,7 @@ export function HeroSceneRaw() {
       // AGEON mark — gentle oscillating rotation
       markGroup.rotation.y = Math.sin(t * 0.45) * 0.55;
       markGroup.rotation.x = Math.sin(t * 0.3) * 0.12;
-      markGroup.position.y = Math.sin(t * 0.7) * 0.08;
+      markGroup.position.y = markBaseY + Math.sin(t * 0.7) * 0.08;
 
       // Mouse parallax — gentle camera drift
       camera.position.x += (mouseRef.current.x * 0.35 - camera.position.x) * 0.05;
