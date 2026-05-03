@@ -49,10 +49,28 @@ export function LifespanHealthspan() {
     [0.25, 0.6],
     ["#ffffff", "#231f20"],
   );
-  const titleOpacity = useTransform(progress, [0, 0.55, 0.75], [1, 1, 0]);
-  const labelsOpacity = useTransform(progress, [0.6, 0.9], [0, 1]);
-  const labelsXRight = useTransform(progress, [0.6, 0.9], [40, 0]);
-  const labelsXLeft = useTransform(progress, [0.6, 0.9], [-40, 0]);
+  // Title fully clears before the labels start appearing, so they never
+  // sit on top of each other.
+  const titleOpacity = useTransform(progress, [0, 0.5, 0.68], [1, 1, 0]);
+  const labelsOpacity = useTransform(progress, [0.7, 0.92], [0, 1]);
+  const labelsXRight = useTransform(progress, [0.7, 0.92], [40, 0]);
+  const labelsXLeft = useTransform(progress, [0.7, 0.92], [-40, 0]);
+  // Title gets a dark text-shadow halo to read against the helix; once
+  // the cream background has taken over there's no helix to read against
+  // and the heavy shadow looks weighty, so fade its alpha to 0.
+  const shadowAlpha = useTransform(progress, [0.32, 0.55], [1, 0]);
+  const titleShadow = useTransform(
+    shadowAlpha,
+    (a) =>
+      `0 1px 3px rgba(0,0,0,${0.95 * a}), 0 4px 14px rgba(0,0,0,${
+        0.85 * a
+      }), 0 8px 32px rgba(0,0,0,${0.6 * a})`,
+  );
+  const eyebrowShadow = useTransform(
+    shadowAlpha,
+    (a) =>
+      `0 1px 4px rgba(0,0,0,${0.9 * a}), 0 0 16px rgba(0,0,0,${0.6 * a})`,
+  );
 
   return (
     <section
@@ -96,21 +114,20 @@ export function LifespanHealthspan() {
             style={{
               color: titleColor,
               opacity: 0.7,
-              textShadow:
-                "0 1px 4px rgba(0,0,0,0.9), 0 0 16px rgba(0,0,0,0.6)",
+              textShadow: eyebrowShadow,
             }}
           >
             — THE GAP —
           </motion.p>
           {/* Stacked text-shadow creates a soft halo that follows the
               letterforms — readable against the helix, no hard-edged
-              scrim patch on the background. */}
+              scrim patch on the background. The shadow alpha fades out
+              as the cream background arrives. */}
           <motion.h2
             className="font-display text-3xl md:text-7xl font-light max-w-4xl mx-auto leading-[1.05] px-4"
             style={{
               color: titleColor,
-              textShadow:
-                "0 1px 3px rgba(0,0,0,0.95), 0 4px 14px rgba(0,0,0,0.85), 0 8px 32px rgba(0,0,0,0.6)",
+              textShadow: titleShadow,
             }}
           >
             Longevity is <span className="italic">not</span> measured in years.
