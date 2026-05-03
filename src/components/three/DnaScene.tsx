@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
+import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 
 export function DnaScene() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -29,24 +30,28 @@ export function DnaScene() {
     renderer.setSize(container.clientWidth, container.clientHeight);
     renderer.setClearColor(0x000000, 0);
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.1;
+    renderer.toneMappingExposure = 0.95;
     container.appendChild(renderer.domElement);
     renderer.domElement.style.position = "absolute";
     renderer.domElement.style.inset = "0";
     renderer.domElement.style.width = "100%";
     renderer.domElement.style.height = "100%";
 
-    // Lighting — keeps the strand readable on pure black background
-    scene.add(new THREE.AmbientLight(0xffffff, 0.35));
-    const keyLight = new THREE.DirectionalLight(0xffffff, 0.85);
+    // Pre-baked indoor environment map — gives the strands soft realistic
+    // reflections rather than the flat self-glow that read as plastic.
+    const pmrem = new THREE.PMREMGenerator(renderer);
+    pmrem.compileEquirectangularShader();
+    const envMap = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+    scene.environment = envMap;
+
+    // Subtle key + rim lighting; the env map carries most of the look.
+    scene.add(new THREE.AmbientLight(0xffffff, 0.18));
+    const keyLight = new THREE.DirectionalLight(0xffffff, 0.7);
     keyLight.position.set(3, 4, 5);
     scene.add(keyLight);
-    const tealLight = new THREE.PointLight(0x00b09b, 1.6, 22);
-    tealLight.position.set(-3, 1, 4);
-    scene.add(tealLight);
-    const warmLight = new THREE.PointLight(0xffca05, 0.6, 20);
-    warmLight.position.set(4, -2, 3);
-    scene.add(warmLight);
+    const rimLight = new THREE.DirectionalLight(0xb8e0d8, 0.45);
+    rimLight.position.set(-4, -2, -3);
+    scene.add(rimLight);
 
     // === DNA double helix ===
     const dnaGroup = new THREE.Group();
@@ -56,7 +61,7 @@ export function DnaScene() {
     const height = 7.2;
     const radius = 0.95;
 
-    function buildStrand(phase: number, color: number, emissive: number) {
+    function buildStrand(phase: number, mat: THREE.Material) {
       const points: THREE.Vector3[] = [];
       const segments = 240;
       for (let i = 0; i <= segments; i++) {
@@ -72,39 +77,44 @@ export function DnaScene() {
         );
       }
       const curve = new THREE.CatmullRomCurve3(points);
-      const geo = new THREE.TubeGeometry(curve, 480, 0.07, 10, false);
-      const mat = new THREE.MeshStandardMaterial({
-        color,
-        emissive,
-        emissiveIntensity: 0.55,
-        metalness: 0.35,
-        roughness: 0.35,
-      });
+      const geo = new THREE.TubeGeometry(curve, 480, 0.075, 14, false);
       return new THREE.Mesh(geo, mat);
     }
 
-    const strandA = buildStrand(0, 0x00d9b8, 0x00b09b);
-    const strandB = buildStrand(Math.PI, 0xf6f1e7, 0xffca05);
+    // Strand A — polished steel / chrome with the faintest cool tint.
+    // Strand B — brushed champagne; warmer to read against strand A.
+    // Both rely on env-map reflections rather than emissive glow.
+    const strandMatA = new THREE.MeshPhysicalMaterial({
+      color: 0xe6ecee,
+      metalness: 1.0,
+      roughness: 0.18,
+      clearcoat: 1.0,
+      clearcoatRoughness: 0.08,
+      envMapIntensity: 1.1,
+    });
+    const strandMatB = new THREE.MeshPhysicalMaterial({
+      color: 0xd9c8a8,
+      metalness: 1.0,
+      roughness: 0.22,
+      clearcoat: 1.0,
+      clearcoatRoughness: 0.1,
+      envMapIntensity: 1.0,
+    });
+    const strandA = buildStrand(0, strandMatA);
+    const strandB = buildStrand(Math.PI, strandMatB);
     dnaGroup.add(strandA, strandB);
 
-    // === Rungs (base pairs) — cylinder spanning the helix diameter ===
+    // === Rungs (base pairs) — anodised dark metal, matte but reflective.
     const rungCount = 26;
-    const rungMat = new THREE.MeshStandardMaterial({
-      color: 0xffffff,
-      emissive: 0x00b09b,
-      emissiveIntensity: 0.25,
-      metalness: 0.3,
-      roughness: 0.55,
-      transparent: true,
-      opacity: 0.6,
+    const rungMat = new THREE.MeshPhysicalMaterial({
+      color: 0x1c1f22,
+      metalness: 0.85,
+      roughness: 0.45,
+      clearcoat: 0.4,
+      clearcoatRoughness: 0.3,
+      envMapIntensity: 0.7,
     });
-    const rungGeo = new THREE.CylinderGeometry(
-      0.028,
-      0.028,
-      radius * 2,
-      8,
-    );
-    const rungWrappers: THREE.Group[] = [];
+    const rungGeo = new THREE.CylinderGeometry(0.032, 0.032, radius * 2, 12);
     for (let i = 0; i < rungCount; i++) {
       const t = i / (rungCount - 1);
       const y = (t - 0.5) * height;
@@ -116,7 +126,6 @@ export function DnaScene() {
       wrapper.position.y = y;
       wrapper.rotation.y = angle;
       dnaGroup.add(wrapper);
-      rungWrappers.push(wrapper);
     }
 
     // Slight initial tilt so the helix reads as 3D from the first frame
@@ -140,14 +149,13 @@ export function DnaScene() {
     onResize();
     window.addEventListener("resize", onResize);
 
-    // Animation loop — slow rotation; the section's scroll-tied opacity
-    // handles the fade-out as the cream background takes over.
+    // Slow, deliberate rotation — premium feel, not spinny.
     const clock = new THREE.Clock();
     let raf = 0;
     const animate = () => {
       const t = clock.getElapsedTime();
-      dnaGroup.rotation.y = t * 0.25;
-      dnaGroup.rotation.x = 0.18 + Math.sin(t * 0.35) * 0.06;
+      dnaGroup.rotation.y = t * 0.15;
+      dnaGroup.rotation.x = 0.18 + Math.sin(t * 0.25) * 0.05;
       renderer.render(scene, camera);
       raf = requestAnimationFrame(animate);
     };
@@ -156,11 +164,13 @@ export function DnaScene() {
     return () => {
       cancelAnimationFrame(raf);
       window.removeEventListener("resize", onResize);
+      pmrem.dispose();
+      envMap.dispose();
       renderer.dispose();
       strandA.geometry.dispose();
       strandB.geometry.dispose();
-      (strandA.material as THREE.Material).dispose();
-      (strandB.material as THREE.Material).dispose();
+      strandMatA.dispose();
+      strandMatB.dispose();
       rungGeo.dispose();
       rungMat.dispose();
       if (renderer.domElement.parentNode === container) {
