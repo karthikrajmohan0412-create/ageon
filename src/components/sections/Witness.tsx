@@ -2,35 +2,32 @@
 
 import { motion, useInView, useMotionValue, useTransform, animate } from "framer-motion";
 import { useEffect, useRef } from "react";
+import { imagery } from "@/lib/imagery";
 
 const stats = [
   {
     value: 87,
     suffix: "%",
-    arrow: "↑",
     label: "Energy and cognitive performance",
-    sub: "Sustained recovery between sessions",
+    sub: "Sustained recovery between sessions.",
   },
   {
     value: 34,
     suffix: "%",
-    arrow: "↓",
     label: "Inflammation markers",
-    sub: "Measurable improvement in metabolic health",
+    sub: "Measurable improvement in metabolic health.",
   },
   {
     value: 62,
     suffix: "%",
-    arrow: "↑",
     label: "Sleep quality and recovery speed",
-    sub: "Improved HRV — a direct measure of your body's resilience",
+    sub: "Improved HRV — a direct measure of your body's resilience.",
   },
   {
     value: 3,
     suffix: "×",
-    arrow: "→",
     label: "Habits that sustain",
-    sub: "Long after you begin",
+    sub: "Long after you begin.",
   },
 ];
 
@@ -47,56 +44,80 @@ function Counter({ to, suffix }: { to: number; suffix: string }) {
   }, [inView, count, to]);
 
   return (
-    <span ref={ref} className="font-display text-5xl md:text-7xl font-light tabular-nums">
+    <span ref={ref} className="font-display text-5xl md:text-8xl font-light tabular-nums">
       <motion.span>{rounded}</motion.span>
-      <span className="text-white/80">{suffix}</span>
+      <span className="text-teal">{suffix}</span>
     </span>
   );
 }
 
 export function Witness() {
   return (
-    <section className="relative py-20 md:py-32 px-6 md:px-12 bg-[#0c2421] text-white overflow-hidden">
-      <div className="absolute inset-0 opacity-30 bg-[radial-gradient(circle_at_70%_30%,rgba(0,176,155,0.18),transparent_55%)]" />
-      <div className="relative max-w-6xl mx-auto">
+    <section className="relative py-20 md:py-32 px-6 md:px-12 bg-gradient-to-b from-black via-zinc-950 to-black text-white overflow-hidden">
+      <div className="absolute inset-0 opacity-30 bg-[radial-gradient(circle_at_70%_30%,rgba(255,202,5,0.15),transparent_50%)]" />
+      <div className="relative max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.8 }}
-          className="mb-16 md:mb-20"
+          className="text-center mb-24"
         >
-          <h2 className="font-display text-3xl md:text-6xl font-light leading-[1.1] max-w-4xl">
+          <h2 className="font-display text-3xl md:text-6xl font-light leading-tight max-w-4xl mx-auto">
             Here&apos;s what you&apos;ll witness at Ageon.
-            <span className="block italic text-white/55 mt-2">
+            <span className="block italic text-white/55 mt-2 md:mt-3">
               Through the journey.
             </span>
           </h2>
-          <p className="text-white/50 mt-6 max-w-xl text-sm md:text-base">
+          <p className="text-white/50 mt-6 max-w-xl mx-auto">
             Measurable, science-based improvements within days.
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-10 md:gap-x-16 gap-y-10 md:gap-y-14 border-t border-white/10 pt-10">
-          {stats.map((s, i) => (
-            <motion.div
-              key={s.label}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.7, delay: i * 0.1 }}
-              className="flex flex-col gap-2"
-            >
-              <span className="text-teal text-2xl md:text-3xl font-light leading-none">
-                {s.arrow}
-              </span>
-              <Counter to={s.value} suffix={s.suffix} />
-              <h3 className="font-semibold text-base md:text-lg text-white mt-1">
-                {s.label}
-              </h3>
-              <p className="text-white/50 text-sm">{s.sub}</p>
-            </motion.div>
-          ))}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-center">
+          {/* Photo column */}
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.9 }}
+            className="md:col-span-5 relative"
+          >
+            <div className="relative aspect-[4/5] rounded-3xl overflow-hidden">
+              <img
+                src={imagery.witness.lifestyle}
+                alt="Active recovery"
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+              <div className="absolute bottom-6 left-6 right-6">
+                <p className="text-[10px] tracking-[0.3em] text-teal mb-2">— LIVED —</p>
+                <p className="text-white text-base font-light">
+                  Vitality is a curve you can move. We help you bend it back.
+                </p>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Stats column */}
+          <div className="md:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-8 md:gap-10">
+            {stats.map((s, i) => (
+              <motion.div
+                key={s.label}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.7, delay: i * 0.1 }}
+                className="flex flex-col gap-3 border-t border-white/10 pt-6"
+              >
+                <Counter to={s.value} suffix={s.suffix} />
+                <h3 className="font-display text-xl md:text-2xl font-light text-white">
+                  {s.label}
+                </h3>
+                <p className="text-white/50 text-sm">{s.sub}</p>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </div>
     </section>
