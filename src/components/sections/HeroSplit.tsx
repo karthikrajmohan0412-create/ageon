@@ -105,7 +105,6 @@ export function HeroSplit() {
           className="relative flex items-end md:items-center px-6 pb-12 pt-24 md:p-16"
         >
           <div className="max-w-md">
-            <p className="text-white/40 text-[10px] md:text-xs tracking-[0.4em] mb-4 md:mb-6">01 — LIVING</p>
             <h2 className="font-display text-2xl md:text-5xl text-white leading-tight font-light">
               There is a difference between
               <span className="block mt-2 md:mt-3 italic font-light text-white/60">living</span>
@@ -121,7 +120,6 @@ export function HeroSplit() {
           className="relative flex items-start md:items-center justify-start md:justify-end px-6 pt-12 pb-24 md:p-16"
         >
           <div className="max-w-md">
-            <p className="text-white/70 text-[10px] md:text-xs tracking-[0.4em] mb-4 md:mb-6">02 — ALIVE</p>
             <h2 className="font-display text-2xl md:text-5xl text-white leading-tight font-light">
               <span className="font-semibold">Ageon</span> is the transformation
               <span className="block mt-2 md:mt-3 text-white/90">from one to the other.</span>

@@ -117,7 +117,7 @@ export function LifespanHealthspan() {
               textShadow: eyebrowShadow,
             }}
           >
-            — THE GAP —
+            — LONGEVITY —
           </motion.p>
           {/* Stacked text-shadow creates a soft halo that follows the
               letterforms — readable against the helix, no hard-edged
@@ -136,46 +136,61 @@ export function LifespanHealthspan() {
 
         <motion.div
           style={{ opacity: labelsOpacity }}
-          className="absolute inset-0 flex flex-col md:grid md:grid-cols-2 items-center md:items-center justify-center md:justify-center gap-8 md:gap-0 px-6 md:px-24 py-16 pointer-events-none z-20"
+          className="absolute inset-0 flex items-center justify-center px-6 md:px-24 py-16 pointer-events-none z-20"
         >
-          <motion.div
-            style={{ x: labelsXLeft }}
-            className="w-full max-w-xs text-center md:text-left"
-          >
-            <p className="text-[10px] tracking-[0.4em] text-zinc-500 mb-3">LIFESPAN</p>
-            <h3 className="font-display text-2xl md:text-3xl text-zinc-900 font-light leading-tight mb-4">
-              The number of years you exist.
-            </h3>
-            <div className="flex flex-wrap gap-2 justify-center md:justify-start">
-              {["Decline", "Fatigue", "Compromise", "Reaction"].map((w) => (
-                <span
-                  key={w}
-                  className="inline-block px-3 py-1 rounded-full border border-zinc-400/50 text-zinc-600 text-xs"
-                >
-                  {w}
-                </span>
-              ))}
+          <div className="w-full max-w-4xl">
+            <div className="grid grid-cols-2 gap-4 md:gap-12 border-b border-zinc-400/30 pb-3 mb-1">
+              <motion.p
+                style={{ x: labelsXLeft }}
+                className="text-[10px] md:text-xs tracking-[0.4em] text-zinc-500"
+              >
+                LIFESPAN
+              </motion.p>
+              <motion.p
+                style={{ x: labelsXRight }}
+                className="text-[10px] md:text-xs tracking-[0.4em] text-teal"
+              >
+                HEALTHSPAN
+              </motion.p>
             </div>
-          </motion.div>
-          <motion.div
-            style={{ x: labelsXRight }}
-            className="w-full max-w-xs text-center md:text-right md:ml-auto"
-          >
-            <p className="text-[10px] tracking-[0.4em] text-teal mb-3">HEALTHSPAN</p>
-            <h3 className="font-display text-2xl md:text-3xl text-ink font-light leading-tight mb-4">
-              The number of years you live.
-            </h3>
-            <div className="flex flex-wrap gap-2 justify-center md:justify-end">
-              {["Vitality", "Energy", "Capacity", "Prevention"].map((w) => (
-                <span
-                  key={w}
-                  className="inline-block px-3 py-1 rounded-full bg-teal/15 border border-teal/40 text-teal text-xs"
+            {[
+              {
+                left: "Built to manage illness, not aliveness",
+                right: (
+                  <>
+                    Energy that makes you feel{" "}
+                    <span className="text-teal">truly</span> alive
+                  </>
+                ),
+              },
+              {
+                left: "Years that accumulate",
+                right: "A life that gives you confidence",
+              },
+              {
+                left: "Living with decline",
+                right: "Living without limits. Every day.",
+              },
+            ].map((row, i) => (
+              <div
+                key={i}
+                className="grid grid-cols-2 gap-4 md:gap-12 border-b border-zinc-400/20 py-4 md:py-6"
+              >
+                <motion.p
+                  style={{ x: labelsXLeft }}
+                  className="font-display italic text-zinc-500 text-sm md:text-lg leading-snug"
                 >
-                  {w}
-                </span>
-              ))}
-            </div>
-          </motion.div>
+                  {row.left}
+                </motion.p>
+                <motion.p
+                  style={{ x: labelsXRight }}
+                  className="font-display text-ink text-sm md:text-lg leading-snug"
+                >
+                  {row.right}
+                </motion.p>
+              </div>
+            ))}
+          </div>
         </motion.div>
       </div>
     </section>

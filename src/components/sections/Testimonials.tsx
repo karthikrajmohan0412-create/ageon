@@ -57,7 +57,6 @@ export function Testimonials() {
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
-          <p className="text-xs tracking-[0.4em] text-ink/40 mb-4">— C8 —</p>
           <h2 className="font-display text-4xl md:text-6xl font-light leading-tight">
             Real people.{" "}
             <span className="italic" style={{ color: "#00b09b" }}>

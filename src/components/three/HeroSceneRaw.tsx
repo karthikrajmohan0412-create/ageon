@@ -128,12 +128,6 @@ export function HeroSceneRaw() {
         floatPhase: 0.6,
       },
       {
-        mesh: createOrb(0xc3161c, [4.2, -1.5, -2.0], 0.6, 0.25),
-        basePosition: new THREE.Vector3(4.2, -1.5, -2.0),
-        speed: 1.1,
-        floatPhase: 2.2,
-      },
-      {
         mesh: createOrb(0x00d9b8, [5.5, -0.2, -3.0], 0.55, 0.3),
         basePosition: new THREE.Vector3(5.5, -0.2, -3.0),
         speed: 0.7,
@@ -208,15 +202,15 @@ export function HeroSceneRaw() {
     const orbBaseYOriginal = orbs.map((o) => o.basePosition.y);
 
     // Which orbs are the dark "atmospheric" ones (first two) vs the
-    // colourful warm ones (last three). On mobile the LIVING (dark) and
+    // colourful warm ones (last two). On mobile the LIVING (dark) and
     // ALIVE (teal) halves stack vertically, so dark orbs need to stay in
     // the top half and warm orbs in the bottom half.
-    const orbIsDark = [true, true, false, false, false];
+    const orbIsDark = [true, true, false, false];
 
     // On mobile, place each orb on the left or right side of the screen
     // (sign of X) so each half has blobs on BOTH sides instead of all
     // clumping into one corner.
-    const orbMobileXSide = [-1, 1, 1, -1, 1];
+    const orbMobileXSide = [-1, 1, -1, 1];
 
     // Vertical offset applied to the centre mark — set by onResize and
     // honoured by the animation loop so its float doesn't clobber it.

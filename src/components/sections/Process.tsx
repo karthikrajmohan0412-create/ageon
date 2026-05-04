@@ -6,28 +6,28 @@ import { useEffect, useRef, useState } from "react";
 const steps = [
   {
     n: "01",
-    title: "Discover",
-    body: "A deep diagnostic. Bloodwork, ECG, HRV, body composition, lifestyle. We see you in data, not assumption.",
+    title: "Assess",
+    body: "A comprehensive health diagnostic. Your starting point, precisely understood.",
   },
   {
     n: "02",
-    title: "Design",
-    body: "A protocol built around your numbers. Therapies, nutrition, recovery — sequenced for the result you want.",
+    title: "Protocol",
+    body: "A plan designed around your results. Not a package. Yours.",
   },
   {
     n: "03",
-    title: "Deliver",
-    body: "Sessions delivered by a clinical team. Cold plunge, infrared sauna, PEMF, red light, hydrogen — applied precisely.",
+    title: "Therapies",
+    body: "Clinically validated. Physician supervised. Delivered with precision.",
   },
   {
     n: "04",
-    title: "Measure",
-    body: "Every visit logged. Every marker tracked. You see the line move week over week.",
+    title: "Track",
+    body: "Every session measured. Every outcome documented.",
   },
   {
     n: "05",
-    title: "Adapt",
-    body: "Your plan changes as you do. Doctor and dietician check in monthly. The protocol evolves with your life.",
+    title: "Optimise",
+    body: "Your plan is reviewed and refined. Continuously.",
   },
 ];
 
@@ -115,11 +115,10 @@ export function Process() {
 
           {/* RIGHT — step content */}
           <div className="relative max-h-full overflow-y-auto scrollbar-hide">
-            <p className="text-xs tracking-[0.4em] text-teal mb-3">— C4 / WHAT HAPPENS —</p>
             <h2 className="font-display text-2xl md:text-5xl font-light leading-tight mb-6 md:mb-8">
               Begin your <span className="italic text-teal">transformation</span>.
-              <span className="block text-white/60 text-lg md:text-2xl mt-2">
-                Personalised. Step by step.
+              <span className="block text-white/60 text-lg md:text-2xl mt-2 italic">
+                Personalised for you. Step by step.
               </span>
             </h2>
             <div className="space-y-3">

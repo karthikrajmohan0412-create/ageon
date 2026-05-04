@@ -29,7 +29,6 @@ export function Location() {
       />
 
       <div className="relative max-w-7xl mx-auto px-6 md:px-12 py-20 md:py-32">
-        <p className="text-xs tracking-[0.4em] text-teal mb-4">— C7 / VISIT —</p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-center">
           <div>
             <h2 className="font-display text-3xl md:text-6xl font-light leading-tight">

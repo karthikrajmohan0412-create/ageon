@@ -60,7 +60,6 @@ export function ThreePillars() {
           transition={{ duration: 0.8 }}
           className="text-center mb-20"
         >
-          <p className="text-xs tracking-[0.4em] text-ink/50 mb-4">— C3 —</p>
           <h2 className="font-display text-3xl md:text-6xl text-ink font-light leading-tight max-w-3xl mx-auto">
             What we do to add{" "}
             <span className="italic" style={{ color: "#00b09b" }}>
